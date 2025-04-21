@@ -43,14 +43,22 @@ npm install
 ```
 
 3. 配置环境变量
-   创建 `.env` 文件并添加以下配置：
+
+项目使用环境变量来管理配置。请按照以下步骤设置：
+
+- 复制 `.env.example` 文件为 `.env.local`（用于本地开发）或 `.env`（用于生产环境）
+- 填写所有必要的环境变量值
+- 确保不要提交包含实际密钥的 `.env` 或 `.env.local` 文件到代码仓库
+
+环境变量说明：
 
 ```env
 # 数据库
 DATABASE_URL="postgresql://username:password@localhost:5432/imgtovideo?schema=public"
 
 # NextAuth
-NEXTAUTH_URL="http://localhost:3000"
+NEXTAUTH_URL="http://localhost:3000"  # 本地开发
+# NEXTAUTH_URL="https://your-domain.com"  # 生产环境
 NEXTAUTH_SECRET="your_nextauth_secret"
 
 # GitHub OAuth
@@ -58,8 +66,8 @@ GITHUB_ID="your_github_client_id"
 GITHUB_SECRET="your_github_client_secret"
 
 # Stripe
-STRIPE_PUBLISHABLE_KEY="your_stripe_publishable_key"
-STRIPE_SECRET_KEY="your_stripe_secret_key"
+STRIPE_PUBLISHABLE_KEY="your_stripe_publishable_key"  # 本地使用 pk_test_ 开头，生产使用 pk_live_ 开头
+STRIPE_SECRET_KEY="your_stripe_secret_key"  # 本地使用 sk_test_ 开头，生产使用 sk_live_ 开头
 STRIPE_WEBHOOK_SECRET="your_stripe_webhook_secret"
 NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY="your_stripe_publishable_key"
 
@@ -99,12 +107,20 @@ src/
 
 项目可以部署到 Vercel、Netlify 或其他支持 Next.js 的平台。
 
-### Vercel 部署
+### 环境变量配置
 
-1. 将项目推送到 GitHub
-2. 在 Vercel 上导入项目
-3. 配置环境变量
-4. 部署
+在部署时，请确保设置所有必要的环境变量。不同平台的环境变量设置方式：
+
+- **Vercel**: 在项目设置中的 Environment Variables 部分添加
+- **Netlify**: 在 Site settings > Build & deploy > Environment 中添加
+- **其他平台**: 参考相应平台的文档设置环境变量
+
+### 安全注意事项
+
+- 永远不要将包含实际密钥的 `.env` 或 `.env.local` 文件提交到代码仓库
+- 使用不同的密钥用于开发和生产环境
+- 定期轮换密钥以提高安全性
+- 使用环境变量管理工具（如 Vercel 的环境变量管理）来安全地存储生产环境密钥
 
 ## 贡献
 
