@@ -57,17 +57,16 @@ export async function POST(req: Request) {
     }
 
     const buffer = Buffer.from(await image.arrayBuffer());
-    const videoUrl = await generateVideoFromImage(buffer, description);
+    const taskId = await generateVideoFromImage(buffer, description);
 
-    // 创建视频记录
+    // 创建视频记录，初始状态为 processing
     const video = await prisma.video.create({
       data: {
         title,
         description,
-        url: videoUrl,
         userId: user.id,
-        images: [videoUrl],
-        status: "completed",
+        images: [], // 初始为空数组，等待任务完成后更新
+        status: "processing",
       },
     });
 
@@ -82,7 +81,7 @@ export async function POST(req: Request) {
       },
     });
 
-    return NextResponse.json(video);
+    return NextResponse.json({ ...video, taskId });
   } catch (error) {
     console.error("Error creating video:", error);
     return NextResponse.json({ error: "服务器内部错误" }, { status: 500 });

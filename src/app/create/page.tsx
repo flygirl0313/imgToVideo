@@ -73,11 +73,33 @@ export default function CreatePage() {
           );
           const statusData = await statusResponse.json();
 
-          if (statusData.status === "completed") {
+          if (statusData.status === "completed" && statusData.videoUrl) {
             clearInterval(pollInterval);
+            // 更新视频记录
+            await fetch(`/api/videos/${data.id}`, {
+              method: "PATCH",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify({
+                url: statusData.videoUrl,
+                images: [statusData.videoUrl],
+                status: "completed",
+              }),
+            });
             router.push(`/dashboard?video=${data.id}`);
           } else if (statusData.status === "failed") {
             clearInterval(pollInterval);
+            // 更新视频状态为失败
+            await fetch(`/api/videos/${data.id}`, {
+              method: "PATCH",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify({
+                status: "failed",
+              }),
+            });
             alert("视频生成失败，请重试");
             setIsLoading(false);
           }
