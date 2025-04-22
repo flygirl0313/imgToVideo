@@ -110,7 +110,7 @@ export default function Home() {
             <Card className="overflow-hidden hover:shadow-lg transition-shadow duration-300">
               <div className="aspect-video relative bg-gray-100">
                 <video
-                  src="./examples/videos/base.mp4"
+                  src="./examples/videos/base01.mp4"
                   autoPlay
                   loop
                   muted
@@ -128,7 +128,7 @@ export default function Home() {
             <Card className="overflow-hidden hover:shadow-lg transition-shadow duration-300">
               <div className="aspect-video relative bg-gray-100">
                 <video
-                  src="./examples/videos/base2.mp4"
+                  src="./examples/videos/base02.mp4"
                   autoPlay
                   loop
                   muted
@@ -146,7 +146,7 @@ export default function Home() {
             <Card className="overflow-hidden hover:shadow-lg transition-shadow duration-300">
               <div className="aspect-video relative bg-gray-100">
                 <video
-                  src="./examples/videos/base3.mp4"
+                  src="./examples/videos/base03.mp4"
                   autoPlay
                   loop
                   muted
