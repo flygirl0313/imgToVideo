@@ -1,3 +1,0 @@
--- AlterTable
-ALTER TABLE "User" ADD COLUMN     "freeTrialUsed" BOOLEAN NOT NULL DEFAULT false,
-ALTER COLUMN "credits" SET DEFAULT 10;
