@@ -18,6 +18,7 @@ import {
   Wand2,
 } from "lucide-react";
 import { motion } from "framer-motion";
+import { Textarea } from "@/components/ui/textarea";
 
 export default function CreatePage() {
   const { data: session } = useSession();
@@ -27,6 +28,7 @@ export default function CreatePage() {
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [preview, setPreview] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
+  const [description, setDescription] = useState("");
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -42,35 +44,28 @@ export default function CreatePage() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!session) {
-      router.push("/api/auth/signin");
-      return;
-    }
-
-    if (!selectedFile) {
-      alert("请选择一张图片");
-      return;
-    }
+    if (!selectedFile || !description) return;
 
     setIsLoading(true);
+    const formData = new FormData();
+    formData.append("image", selectedFile);
+    formData.append("title", selectedFile.name);
+    formData.append("description", description);
 
     try {
-      const formData = new FormData();
-      formData.append("image", selectedFile);
-
       const response = await fetch("/api/create", {
         method: "POST",
         body: formData,
       });
 
       if (!response.ok) {
-        throw new Error("创建视频失败");
+        throw new Error("Failed to create video");
       }
 
       const data = await response.json();
       router.push(`/dashboard?video=${data.id}`);
     } catch (error) {
-      console.error(error);
+      console.error("Error creating video:", error);
       alert("创建视频失败，请重试");
     } finally {
       setIsLoading(false);
@@ -125,64 +120,53 @@ export default function CreatePage() {
                     className="hidden"
                   />
                   {preview ? (
-                    <div className="relative aspect-video mb-4">
+                    <div className="relative w-full h-48">
                       <img
                         src={preview}
                         alt="Preview"
-                        className="w-full h-full object-cover rounded-lg shadow-lg"
+                        className="w-full h-full object-contain rounded-lg"
                       />
-                      <Button
-                        type="button"
-                        variant="destructive"
-                        size="sm"
-                        className="absolute top-2 right-2 bg-white/90 hover:bg-white text-red-500 border border-red-200"
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          setSelectedFile(null);
-                          setPreview(null);
-                        }}
-                      >
-                        {t.create.removeImage}
-                      </Button>
                     </div>
                   ) : (
-                    <div className="space-y-4">
-                      <div className="mx-auto w-16 h-16 bg-gradient-to-br from-purple-500 to-pink-500 rounded-full flex items-center justify-center">
-                        <Upload className="w-8 h-8 text-white" />
-                      </div>
-                      <div className="space-y-2">
-                        <p className="text-lg font-medium text-gray-700">
-                          {t.create.dragAndDrop}
-                        </p>
-                        <p className="text-sm text-gray-500">
-                          {t.create.supportedFormats}
-                        </p>
-                      </div>
+                    <div className="flex flex-col items-center gap-2">
+                      <Upload className="w-8 h-8 text-gray-400" />
+                      <p className="text-gray-500">
+                        {t.create.uploadDescription}
+                      </p>
                     </div>
                   )}
                 </div>
               </div>
 
-              <div className="flex justify-center">
-                <Button
-                  type="submit"
-                  size="lg"
-                  disabled={!selectedFile || isLoading}
-                  className="w-full max-w-xs bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white border-none"
-                >
-                  {isLoading ? (
-                    <>
-                      <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                      {t.create.processing}
-                    </>
-                  ) : (
-                    <>
-                      <Video className="w-4 h-4 mr-2" />
-                      {t.create.createButton}
-                    </>
-                  )}
-                </Button>
+              <div className="space-y-4">
+                <label className="block text-lg font-medium bg-clip-text text-transparent bg-gradient-to-r from-purple-600 to-pink-600">
+                  {t.create.descriptionLabel}
+                </label>
+                <Textarea
+                  placeholder={t.create.descriptionPlaceholder}
+                  value={description}
+                  onChange={(e) => setDescription(e.target.value)}
+                  className="min-h-[100px] resize-none"
+                />
               </div>
+
+              <Button
+                type="submit"
+                disabled={!selectedFile || !description || isLoading}
+                className="w-full bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white border-none"
+              >
+                {isLoading ? (
+                  <>
+                    <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                    {t.create.processing}
+                  </>
+                ) : (
+                  <>
+                    <Wand2 className="w-4 h-4 mr-2" />
+                    {t.create.createButton}
+                  </>
+                )}
+              </Button>
             </form>
           </Card>
 

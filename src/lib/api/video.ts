@@ -1,3 +1,9 @@
+import Replicate from "replicate";
+
+const replicate = new Replicate({
+  auth: process.env.REPLICATE_API_TOKEN,
+});
+
 const API_KEY = process.env.VIDEO_API_KEY;
 const API_BASE_URL = "https://api.gpt.ge";
 
@@ -19,40 +25,30 @@ interface LumaGenerationResponse {
 }
 
 export async function generateVideoFromImage(
-  imageBuffer: Buffer
+  imageBuffer: Buffer,
+  userPrompt: string
 ): Promise<string> {
   try {
-    // 1. 将图片转换为 base64
+    // 将图片转换为 base64
     const base64Image = imageBuffer.toString("base64");
+    const dataUrl = `data:image/jpeg;base64,${base64Image}`;
 
-    // 2. 调用 Luma API 生成视频
-    const response = await fetch(`${API_BASE_URL}/luma/generations`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${API_KEY}`,
-      },
-      body: JSON.stringify({
-        image_url: `data:image/jpeg;base64,${base64Image}`,
+    // 调用 Luma API 生成视频
+    const output = await replicate.run("lucataco/luma:latest", {
+      input: {
+        image: dataUrl,
+        user_prompt: userPrompt,
         expand_prompt: true,
-        loop: true, // 循环播放
-      }),
+      },
     });
 
-    if (!response.ok) {
-      const errorData = await response.json().catch(() => null);
-      throw new Error(errorData?.error?.message || "Failed to generate video");
+    if (!output || typeof output !== "string") {
+      throw new Error("Failed to generate video");
     }
 
-    const data: LumaGenerationResponse = await response.json();
-
-    if (!data.result?.video_url) {
-      throw new Error("No video URL in response");
-    }
-
-    return data.result.video_url;
+    return output;
   } catch (error) {
-    console.error("Video generation error:", error);
+    console.error("Error generating video:", error);
     throw error;
   }
 }

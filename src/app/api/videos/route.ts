@@ -8,15 +8,13 @@ import { z } from "zod";
 export async function GET() {
   try {
     const session = await getServerSession(authOptions);
-    if (!session?.user?.email) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    if (!session || !session.user?.id) {
+      return NextResponse.json({ error: "未登录" }, { status: 401 });
     }
 
     const videos = await prisma.video.findMany({
       where: {
-        user: {
-          email: session.user.email,
-        },
+        userId: session.user.id,
       },
       orderBy: {
         createdAt: "desc",
@@ -37,8 +35,8 @@ export async function GET() {
 export async function POST(request: Request) {
   try {
     const session = await getServerSession(authOptions);
-    if (!session?.user?.email) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    if (!session || !session.user?.id) {
+      return NextResponse.json({ error: "未登录" }, { status: 401 });
     }
 
     const body = await request.json();
@@ -51,11 +49,11 @@ export async function POST(request: Request) {
       .parse(body);
 
     const user = await prisma.user.findUnique({
-      where: { email: session.user.email },
+      where: { id: session.user.id },
     });
 
     if (!user) {
-      return NextResponse.json({ error: "User not found" }, { status: 404 });
+      return NextResponse.json({ error: "用户不存在" }, { status: 404 });
     }
 
     const video = await prisma.video.create({
