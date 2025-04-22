@@ -28,19 +28,33 @@ export const translations = {
     },
     examples: {
       title: "效果展示",
-      description: "看看其他用户是如何将图片转换为精美视频的",
+      description: "查看我们的AI视频生成效果",
       landscape: {
-        title: "风景动画",
-        description: "将静态风景照片转换为生动的动画视频，展现大自然的魅力",
+        title: "风景",
+        description: "将静态风景照片转换为动态视频",
       },
       product: {
-        title: "产品展示",
-        description: "为产品图片添加动态效果，让商品展示更加生动有趣",
+        title: "产品",
+        description: "为产品展示添加动态效果",
       },
       art: {
-        title: "艺术创作",
-        description: "将艺术作品转换为动态视频，展现创意的无限可能",
+        title: "艺术",
+        description: "将艺术作品转化为动态展示",
       },
+      moreButton: "查看更多示例",
+      categories: {
+        all: "全部",
+        nature: "自然",
+        commercial: "商业",
+        creative: "创意",
+        urban: "城市",
+        food: "美食",
+        fashion: "时尚",
+        travel: "旅行",
+        architecture: "建筑",
+        sports: "运动",
+      },
+      backToHome: "返回首页",
     },
     pricing: {
       title: "价格方案",
@@ -90,6 +104,46 @@ export const translations = {
         },
       ],
     },
+    create: {
+      title: "创建新视频",
+      description: "上传您的图片，我们将为您创建一个精美的动画视频",
+      uploadLabel: "选择图片",
+      dragAndDrop: "拖放图片到这里",
+      supportedFormats: "支持 JPG、PNG 格式",
+      removeImage: "移除图片",
+      processing: "处理中...",
+      createButton: "创建视频",
+      tips: {
+        image: {
+          title: "选择高质量图片",
+          description: "使用清晰、高分辨率的图片可以获得更好的效果",
+        },
+        video: {
+          title: "视频效果",
+          description: "我们将为您的图片添加流畅的动画效果",
+        },
+        processing: {
+          title: "处理时间",
+          description: "视频生成通常需要 1-2 分钟，请耐心等待",
+        },
+      },
+    },
+    dashboard: {
+      welcome: "欢迎回来",
+      subtitle: "管理您的视频和积分",
+      credits: "我的积分",
+      buyCredits: "购买积分",
+      quickActions: "快速操作",
+      createNew: "创建新视频",
+      rechargeCredits: "充值积分",
+      myVideos: "我的视频",
+      noVideos: "您还没有创建任何视频",
+      processing: "处理中...",
+      completed: "已完成",
+      failed: "生成失败",
+      download: "下载",
+      delete: "删除",
+    },
   },
   en: {
     hero: {
@@ -121,24 +175,34 @@ export const translations = {
       },
     },
     examples: {
-      title: "Showcase",
-      description:
-        "See how other users transform their images into beautiful videos",
+      title: "Examples",
+      description: "See our AI video generation effects",
       landscape: {
-        title: "Landscape Animation",
-        description:
-          "Transform static landscape photos into vivid animated videos, showcasing the beauty of nature",
+        title: "Landscape",
+        description: "Transform static landscape photos into dynamic videos",
       },
       product: {
-        title: "Product Showcase",
-        description:
-          "Add dynamic effects to product images, making product presentations more engaging",
+        title: "Product",
+        description: "Add dynamic effects to product showcases",
       },
       art: {
-        title: "Artistic Creation",
-        description:
-          "Transform artworks into dynamic videos, showcasing infinite creative possibilities",
+        title: "Art",
+        description: "Transform artworks into dynamic presentations",
       },
+      moreButton: "View More Examples",
+      categories: {
+        all: "All",
+        nature: "Nature",
+        commercial: "Commercial",
+        creative: "Creative",
+        urban: "Urban",
+        food: "Food",
+        fashion: "Fashion",
+        travel: "Travel",
+        architecture: "Architecture",
+        sports: "Sports",
+      },
+      backToHome: "Back to Home",
     },
     pricing: {
       title: "Pricing Plans",
@@ -192,6 +256,48 @@ export const translations = {
             "Our team uses this tool to create marketing videos, and the results are excellent. It's simple to use and produces high-quality output. Highly recommended!",
         },
       ],
+    },
+    create: {
+      title: "Create New Video",
+      description:
+        "Upload your image and we'll create a beautiful animated video for you",
+      uploadLabel: "Select Image",
+      dragAndDrop: "Drag and drop your image here",
+      supportedFormats: "Supports JPG, PNG formats",
+      removeImage: "Remove Image",
+      processing: "Processing...",
+      createButton: "Create Video",
+      tips: {
+        image: {
+          title: "Choose High Quality Image",
+          description: "Use clear, high-resolution images for better results",
+        },
+        video: {
+          title: "Video Effects",
+          description: "We'll add smooth animations to your image",
+        },
+        processing: {
+          title: "Processing Time",
+          description:
+            "Video generation typically takes 1-2 minutes, please be patient",
+        },
+      },
+    },
+    dashboard: {
+      welcome: "Welcome Back",
+      subtitle: "Manage your videos and credits",
+      credits: "My Credits",
+      buyCredits: "Buy Credits",
+      quickActions: "Quick Actions",
+      createNew: "Create New Video",
+      rechargeCredits: "Recharge Credits",
+      myVideos: "My Videos",
+      noVideos: "You haven't created any videos yet",
+      processing: "Processing...",
+      completed: "Completed",
+      failed: "Failed",
+      download: "Download",
+      delete: "Delete",
     },
   },
 };
