@@ -23,7 +23,7 @@ interface LumaGenerationResponse {
 export async function generateVideoFromImage(
   imageBuffer: Buffer,
   userPrompt: string
-): Promise<string> {
+): Promise<{ taskId: string }> {
   try {
     // 将图片转换为 base64
     const base64Image = imageBuffer.toString("base64");
@@ -41,35 +41,33 @@ export async function generateVideoFromImage(
           "Content-Type": "application/json",
           Authorization: `Bearer ${API_KEY}`,
         },
-        timeout: 120000, // 设置 60 秒超时
+        timeout: 30000, // 设置 30 秒超时，因为只需要等待任务创建
       }
     );
 
     if (!response.data || !response.data.id) {
-      throw new Error("Failed to generate video");
+      throw new Error("Failed to create video generation task");
     }
 
-    // 等待视频生成完成
-    const videoUrl = await waitForVideoGeneration(response.data.id);
-    return videoUrl;
+    // 返回任务ID，让前端轮询任务状态
+    return { taskId: response.data.id };
   } catch (error) {
-    console.error("Error generating video:", error);
+    console.error("Error creating video generation task:", error);
     throw error;
   }
 }
 
-async function waitForVideoGeneration(taskId: string): Promise<string> {
-  const maxAttempts = 60; // 最多等待30次
-  const interval = 2000; // 每2秒检查一次
-
-  for (let attempt = 0; attempt < maxAttempts; attempt++) {
+export async function checkVideoGenerationStatus(
+  taskId: string
+): Promise<{ status: string; videoUrl?: string }> {
+  try {
     const response = await axios.get<LumaGenerationResponse>(
       `${API_BASE_URL}/luma/generations/${taskId}`,
       {
         headers: {
           Authorization: `Bearer ${API_KEY}`,
         },
-        timeout: 120000, // 设置 60 秒超时
+        timeout: 30000, // 设置 30 秒超时
       }
     );
 
@@ -77,16 +75,19 @@ async function waitForVideoGeneration(taskId: string): Promise<string> {
       response.data.state === "completed" &&
       response.data.result?.video_url
     ) {
-      return response.data.result.video_url;
+      return {
+        status: "completed",
+        videoUrl: response.data.result.video_url,
+      };
     }
 
     if (response.data.state === "failed") {
-      throw new Error("Video generation failed");
+      return { status: "failed" };
     }
 
-    // 等待一段时间后再次检查
-    await new Promise((resolve) => setTimeout(resolve, interval));
+    return { status: "processing" };
+  } catch (error) {
+    console.error("Error checking video generation status:", error);
+    throw error;
   }
-
-  throw new Error("Video generation timeout");
 }

@@ -53,6 +53,7 @@ export default function CreatePage() {
     formData.append("description", description);
 
     try {
+      // 创建视频生成任务
       const response = await fetch("/api/create", {
         method: "POST",
         body: formData,
@@ -63,11 +64,43 @@ export default function CreatePage() {
       }
 
       const data = await response.json();
-      router.push(`/dashboard?video=${data.id}`);
+
+      // 开始轮询任务状态
+      const pollInterval = setInterval(async () => {
+        try {
+          const statusResponse = await fetch(
+            `/api/video/status/${data.taskId}`
+          );
+          const statusData = await statusResponse.json();
+
+          if (statusData.status === "completed") {
+            clearInterval(pollInterval);
+            router.push(`/dashboard?video=${data.id}`);
+          } else if (statusData.status === "failed") {
+            clearInterval(pollInterval);
+            alert("视频生成失败，请重试");
+            setIsLoading(false);
+          }
+        } catch (error) {
+          console.error("Error checking video status:", error);
+          clearInterval(pollInterval);
+          alert("检查视频状态失败，请重试");
+          setIsLoading(false);
+        }
+      }, 5000); // 每5秒检查一次
+
+      // 设置超时，5分钟后停止轮询
+      setTimeout(() => {
+        clearInterval(pollInterval);
+        if (isLoading) {
+          alert("视频生成超时，请稍后查看结果");
+          setIsLoading(false);
+          router.push("/dashboard");
+        }
+      }, 300000); // 5分钟超时
     } catch (error) {
       console.error("Error creating video:", error);
       alert("创建视频失败，请重试");
-    } finally {
       setIsLoading(false);
     }
   };
