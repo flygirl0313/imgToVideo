@@ -11,71 +11,76 @@ import { translations } from "@/lib/translations";
 import { ArrowLeft, Video } from "lucide-react";
 import { motion } from "framer-motion";
 
-type ExampleCategory = keyof typeof translations.zh.examples.categories;
-type ExampleTranslation = keyof typeof translations.zh.examples;
-
 const examples = [
   {
     id: 1,
-    category: "nature" as ExampleCategory,
-    translation: "landscape" as ExampleTranslation,
+    title: "Landscape",
+    description: "Beautiful natural landscapes transformed into dynamic videos",
     video: "/examples/videos/base01.mp4",
+    category: "nature",
   },
   {
     id: 2,
-    category: "commercial" as ExampleCategory,
-    translation: "product" as ExampleTranslation,
+    title: "Product",
+    description: "Professional product showcases with smooth transitions",
     video: "/examples/videos/base02.mp4",
+    category: "commercial",
   },
   {
     id: 3,
-    category: "creative" as ExampleCategory,
-    translation: "art" as ExampleTranslation,
+    title: "Art",
+    description: "Creative artistic expressions brought to life",
     video: "/examples/videos/base03.mp4",
+    category: "creative",
   },
   {
     id: 4,
-    category: "urban" as ExampleCategory,
-    translation: "city" as ExampleTranslation,
+    title: "City",
+    description: "Urban scenes with dynamic movement",
     video: "/examples/videos/base01.mp4",
+    category: "urban",
   },
   {
     id: 5,
-    category: "food" as ExampleCategory,
-    translation: "food" as ExampleTranslation,
+    title: "Food",
+    description: "Delicious food presentations with appetizing effects",
     video: "/examples/videos/base02.mp4",
+    category: "food",
   },
   {
     id: 6,
-    category: "fashion" as ExampleCategory,
-    translation: "fashion" as ExampleTranslation,
+    title: "Fashion",
+    description: "Elegant fashion showcases with style",
     video: "/examples/videos/base03.mp4",
+    category: "fashion",
   },
   {
     id: 7,
-    category: "travel" as ExampleCategory,
-    translation: "travel" as ExampleTranslation,
+    title: "Travel",
+    description: "Breathtaking travel moments captured in motion",
     video: "/examples/videos/base01.mp4",
+    category: "travel",
   },
   {
     id: 8,
-    category: "architecture" as ExampleCategory,
-    translation: "architecture" as ExampleTranslation,
+    title: "Architecture",
+    description: "Stunning architectural designs in motion",
     video: "/examples/videos/base02.mp4",
+    category: "architecture",
   },
   {
     id: 9,
-    category: "sports" as ExampleCategory,
-    translation: "sports" as ExampleTranslation,
+    title: "Sports",
+    description: "Dynamic sports moments with energy",
     video: "/examples/videos/base03.mp4",
+    category: "sports",
   },
 ];
 
 export default function ExamplesPage() {
   const { language } = useLanguage();
   const t = translations[language];
-  const [selectedCategory, setSelectedCategory] =
-    useState<ExampleCategory | null>(null);
+  const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
 
   const filteredExamples = selectedCategory
     ? examples.filter((example) => example.category === selectedCategory)
@@ -127,7 +132,11 @@ export default function ExamplesPage() {
               }
               onClick={() => setSelectedCategory(category)}
             >
-              {t.examples.categories[category]}
+              {
+                t.examples.categories[
+                  category as keyof typeof t.examples.categories
+                ]
+              }
             </Button>
           ))}
         </div>
@@ -155,19 +164,17 @@ export default function ExamplesPage() {
                 <div className="p-6">
                   <div className="flex items-center justify-between mb-2">
                     <h3 className="text-xl font-semibold bg-clip-text text-transparent bg-gradient-to-r from-purple-600 to-pink-600">
-                      {t.examples[example.translation]?.title ||
-                        t.examples.categories[example.category]}
+                      {example.title}
                     </h3>
                     <span className="text-sm text-gray-500">
-                      {t.examples.categories[example.category]}
+                      {
+                        t.examples.categories[
+                          example.category as keyof typeof t.examples.categories
+                        ]
+                      }
                     </span>
                   </div>
-                  <p className="text-gray-600">
-                    {t.examples[example.translation]?.description ||
-                      `${t.examples.categories[example.category]} ${
-                        t.examples.description
-                      }`}
-                  </p>
+                  <p className="text-gray-600">{example.description}</p>
                 </div>
               </Card>
             </motion.div>
