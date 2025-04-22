@@ -51,7 +51,7 @@ export async function generateVideoFromImage(
           "Content-Type": "application/json",
           Authorization: `Bearer ${API_KEY}`,
         },
-        timeout: 30000, // 设置 30 秒超时，因为只需要等待任务创建
+        timeout: 60000, // 设置 30 秒超时，因为只需要等待任务创建
       }
     );
 
@@ -77,7 +77,7 @@ export async function checkVideoGenerationStatus(
         headers: {
           Authorization: `Bearer ${API_KEY}`,
         },
-        timeout: 30000, // 设置 30 秒超时
+        timeout: 60000, // 设置 60 秒超时
       }
     );
 
