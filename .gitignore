@@ -62,9 +62,9 @@ Thumbs.db
 .yarn-integrity
 
 # Prisma
-/prisma/migrations/
 /prisma/*.db
 /prisma/*.db-journal
+/prisma/dev.db
 
 # TypeScript
 *.tsbuildinfo
@@ -74,3 +74,4 @@ Thumbs.db
 
 # vercel
 .vercel
+.aider*
