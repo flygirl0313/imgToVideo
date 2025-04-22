@@ -65,9 +65,9 @@ model Video {
   id          String   @id @default(cuid())
   title       String
   description String?
-  url         String
+  url         String   @default("")
   thumbnail   String?
-  images      String[] // 新增的图片数组字段
+  images      String[]
   status      String   @default("processing")
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt

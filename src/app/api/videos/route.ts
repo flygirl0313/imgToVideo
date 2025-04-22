@@ -62,10 +62,9 @@ export async function POST(request: Request) {
       data: {
         title,
         description,
-        images,
         userId: user.id,
-        url: "", // 初始为空字符串，后续处理完成后更新
-        status: "processing", // 设置初始状态
+        images,
+        status: "processing",
       },
     });
 
