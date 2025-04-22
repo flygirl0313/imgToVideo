@@ -5,6 +5,7 @@ import Image from "next/image";
 import { useSession } from "next-auth/react";
 import { Button } from "@/components/ui/button";
 import { User, LogIn } from "lucide-react";
+import { LanguageSwitch } from "@/components/LanguageSwitch";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -17,7 +18,8 @@ export function Navbar() {
 
   return (
     <nav className="fixed top-0 right-0 z-50 p-4">
-      <div className="flex items-center justify-end">
+      <div className="flex items-center justify-end gap-4">
+        <LanguageSwitch />
         {session ? (
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
