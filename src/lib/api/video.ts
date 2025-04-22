@@ -41,6 +41,7 @@ export async function generateVideoFromImage(
           "Content-Type": "application/json",
           Authorization: `Bearer ${API_KEY}`,
         },
+        timeout: 60000, // 设置 60 秒超时
       }
     );
 
@@ -68,6 +69,7 @@ async function waitForVideoGeneration(taskId: string): Promise<string> {
         headers: {
           Authorization: `Bearer ${API_KEY}`,
         },
+        timeout: 60000, // 设置 60 秒超时
       }
     );
 
