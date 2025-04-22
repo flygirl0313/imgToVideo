@@ -41,6 +41,30 @@ export const translations = {
         title: "艺术",
         description: "将艺术作品转化为动态展示",
       },
+      city: {
+        title: "城市",
+        description: "展现城市生活的动态魅力",
+      },
+      food: {
+        title: "美食",
+        description: "让美食展示更加生动诱人",
+      },
+      fashion: {
+        title: "时尚",
+        description: "展示时尚单品的优雅动感",
+      },
+      travel: {
+        title: "旅行",
+        description: "记录精彩旅行瞬间",
+      },
+      architecture: {
+        title: "建筑",
+        description: "展现建筑设计的动态美感",
+      },
+      sports: {
+        title: "运动",
+        description: "捕捉运动场上的精彩瞬间",
+      },
       moreButton: "查看更多示例",
       categories: {
         all: "全部",
@@ -188,6 +212,30 @@ export const translations = {
       art: {
         title: "Art",
         description: "Transform artworks into dynamic presentations",
+      },
+      city: {
+        title: "City",
+        description: "Showcase the dynamic charm of urban life",
+      },
+      food: {
+        title: "Food",
+        description: "Make food presentations more appetizing",
+      },
+      fashion: {
+        title: "Fashion",
+        description: "Showcase the elegance of fashion items",
+      },
+      travel: {
+        title: "Travel",
+        description: "Capture amazing travel moments",
+      },
+      architecture: {
+        title: "Architecture",
+        description: "Showcase the dynamic beauty of architectural designs",
+      },
+      sports: {
+        title: "Sports",
+        description: "Capture exciting sports moments",
       },
       moreButton: "View More Examples",
       categories: {

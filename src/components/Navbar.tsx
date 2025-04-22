@@ -55,7 +55,11 @@ export function Navbar() {
             </DropdownMenuContent>
           </DropdownMenu>
         ) : (
-          <Button asChild size="sm">
+          <Button
+            asChild
+            size="sm"
+            className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white border-none"
+          >
             <Link href="/api/auth/signin" className="flex items-center gap-2">
               <LogIn className="w-4 h-4" />
               登录

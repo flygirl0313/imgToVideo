@@ -2,10 +2,17 @@
 
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Download, Trash2, Loader2, Video as VideoIcon } from "lucide-react";
+import {
+  Download,
+  Trash2,
+  Loader2,
+  Video as VideoIcon,
+  AlertCircle,
+} from "lucide-react";
 import { useLanguage } from "@/lib/language";
 import { translations } from "@/lib/translations";
 import { motion } from "framer-motion";
+import Image from "next/image";
 
 interface Video {
   id: string;
@@ -61,15 +68,20 @@ export function VideoList({ videos }: VideoListProps) {
                   className="w-full h-full object-cover"
                   controls
                 />
-              ) : (
+              ) : video.status === "processing" ? (
                 <div className="absolute inset-0 flex items-center justify-center bg-gradient-to-br from-purple-50 to-pink-50">
                   <div className="text-center">
                     <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-purple-600 mx-auto mb-4" />
-                    <p className="text-gray-600">
-                      {video.status === "processing"
-                        ? t.dashboard.processing
-                        : t.dashboard.failed}
-                    </p>
+                    <p className="text-gray-600">{t.dashboard.processing}</p>
+                  </div>
+                </div>
+              ) : (
+                <div className="absolute inset-0 flex items-center justify-center bg-gradient-to-br from-red-50 to-pink-50">
+                  <div className="text-center">
+                    <div className="w-16 h-16 bg-gradient-to-br from-red-500 to-pink-500 rounded-full flex items-center justify-center mx-auto mb-4">
+                      <AlertCircle className="w-8 h-8 text-white" />
+                    </div>
+                    <p className="text-gray-600">{t.dashboard.failed}</p>
                   </div>
                 </div>
               )}
