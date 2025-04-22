@@ -41,7 +41,7 @@ export async function generateVideoFromImage(
           "Content-Type": "application/json",
           Authorization: `Bearer ${API_KEY}`,
         },
-        timeout: 60000, // 设置 60 秒超时
+        timeout: 120000, // 设置 60 秒超时
       }
     );
 
@@ -59,7 +59,7 @@ export async function generateVideoFromImage(
 }
 
 async function waitForVideoGeneration(taskId: string): Promise<string> {
-  const maxAttempts = 30; // 最多等待30次
+  const maxAttempts = 60; // 最多等待30次
   const interval = 2000; // 每2秒检查一次
 
   for (let attempt = 0; attempt < maxAttempts; attempt++) {
@@ -69,7 +69,7 @@ async function waitForVideoGeneration(taskId: string): Promise<string> {
         headers: {
           Authorization: `Bearer ${API_KEY}`,
         },
-        timeout: 60000, // 设置 60 秒超时
+        timeout: 120000, // 设置 60 秒超时
       }
     );
 
