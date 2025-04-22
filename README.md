@@ -18,7 +18,7 @@
 - **ORM**: Prisma
 - **认证**: NextAuth.js
 - **支付**: Stripe
-- **AI 服务**: Replicate
+- **AI 服务**: Luma
 
 ## 快速开始
 
@@ -71,8 +71,6 @@ STRIPE_SECRET_KEY="your_stripe_secret_key"  # 本地使用 sk_test_ 开头，生
 STRIPE_WEBHOOK_SECRET="your_stripe_webhook_secret"
 NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY="your_stripe_publishable_key"
 
-# Replicate API
-REPLICATE_API_TOKEN="your_replicate_api_token"
 ```
 
 4. 初始化数据库
