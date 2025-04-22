@@ -6,6 +6,7 @@ import { Download, Trash2, Loader2, Video as VideoIcon, X } from "lucide-react";
 import { useLanguage } from "@/lib/language";
 import { translations } from "@/lib/translations";
 import { motion } from "framer-motion";
+import { usePollVideoStatus } from "@/hooks/usePollVideoStatus";
 
 interface Video {
   id: string;
@@ -24,6 +25,13 @@ interface VideoListProps {
 export function VideoList({ videos }: VideoListProps) {
   const { language } = useLanguage();
   const t = translations[language];
+
+  // 对每个处理中的视频使用轮询 hook
+  videos.forEach((video) => {
+    if (video.status === "processing") {
+      usePollVideoStatus(video.id, video.status);
+    }
+  });
 
   if (videos.length === 0) {
     return (
