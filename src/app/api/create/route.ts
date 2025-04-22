@@ -36,7 +36,7 @@ export async function POST(req: Request) {
     const title = formData.get("title") as string;
     const description = formData.get("description") as string;
 
-    if (!image || !title) {
+    if (!image || !title || !description) {
       return NextResponse.json({ error: "缺少必要字段" }, { status: 400 });
     }
 
@@ -57,7 +57,7 @@ export async function POST(req: Request) {
     }
 
     const buffer = Buffer.from(await image.arrayBuffer());
-    const videoUrl = await generateVideoFromImage(buffer);
+    const videoUrl = await generateVideoFromImage(buffer, description);
 
     // 创建视频记录
     const video = await prisma.video.create({

@@ -105,22 +105,27 @@ export const translations = {
       ],
     },
     create: {
-      title: "创建新视频",
-      description: "上传您的图片，我们将为您创建一个精美的动画视频",
-      uploadLabel: "选择图片",
-      dragAndDrop: "拖放图片到这里",
+      title: "创建视频",
+      description: "上传一张图片，添加描述，让 AI 为你生成精彩的视频",
+      uploadLabel: "上传图片",
+      uploadDescription: "点击或拖拽图片到此处",
+      dragAndDrop: "拖拽图片到此处",
       supportedFormats: "支持 JPG、PNG 格式",
       removeImage: "移除图片",
       processing: "处理中...",
-      createButton: "创建视频",
+      createButton: "开始生成",
+      descriptionLabel: "视频描述",
+      descriptionPlaceholder:
+        "描述你想要的视频效果，例如：'让图片中的花朵缓慢绽放，背景有柔和的阳光'",
       tips: {
         image: {
-          title: "选择高质量图片",
-          description: "使用清晰、高分辨率的图片可以获得更好的效果",
+          title: "图片要求",
+          description: "上传清晰、高质量的图片，建议使用 16:9 比例",
         },
         video: {
           title: "视频效果",
-          description: "我们将为您的图片添加流畅的动画效果",
+          description:
+            "AI 将根据图片和描述生成流畅的视频动画，描述越详细效果越好",
         },
         processing: {
           title: "处理时间",
@@ -258,23 +263,29 @@ export const translations = {
       ],
     },
     create: {
-      title: "Create New Video",
+      title: "Create Video",
       description:
-        "Upload your image and we'll create a beautiful animated video for you",
-      uploadLabel: "Select Image",
-      dragAndDrop: "Drag and drop your image here",
+        "Upload an image, add a description, and let AI generate an amazing video for you",
+      uploadLabel: "Upload Image",
+      uploadDescription: "Click or drag image here",
+      dragAndDrop: "Drag and drop image here",
       supportedFormats: "Supports JPG, PNG formats",
       removeImage: "Remove Image",
       processing: "Processing...",
-      createButton: "Create Video",
+      createButton: "Start Generation",
+      descriptionLabel: "Video Description",
+      descriptionPlaceholder:
+        "Describe the video effect you want, e.g., 'Make the flowers in the image slowly bloom with soft sunlight in the background'",
       tips: {
         image: {
-          title: "Choose High Quality Image",
-          description: "Use clear, high-resolution images for better results",
+          title: "Image Requirements",
+          description:
+            "Upload clear, high-quality images, preferably in 16:9 ratio",
         },
         video: {
           title: "Video Effects",
-          description: "We'll add smooth animations to your image",
+          description:
+            "AI will generate smooth video animations based on the image and description. More detailed descriptions yield better results",
         },
         processing: {
           title: "Processing Time",
