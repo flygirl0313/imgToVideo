@@ -2,7 +2,7 @@
 
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Download, Trash2, Loader2, Video as VideoIcon } from "lucide-react";
+import { Download, Trash2, Loader2, Video as VideoIcon, X } from "lucide-react";
 import { useLanguage } from "@/lib/language";
 import { translations } from "@/lib/translations";
 import { motion } from "framer-motion";
@@ -64,12 +64,21 @@ export function VideoList({ videos }: VideoListProps) {
               ) : (
                 <div className="absolute inset-0 flex items-center justify-center bg-gradient-to-br from-purple-50 to-pink-50">
                   <div className="text-center">
-                    <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-purple-600 mx-auto mb-4" />
-                    <p className="text-gray-600">
-                      {video.status === "processing"
-                        ? t.dashboard.processing
-                        : t.dashboard.failed}
-                    </p>
+                    {video.status === "processing" ? (
+                      <>
+                        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-purple-600 mx-auto mb-4" />
+                        <p className="text-gray-600">
+                          {t.dashboard.processing}
+                        </p>
+                      </>
+                    ) : (
+                      <>
+                        <div className="w-12 h-12 rounded-full bg-red-100 flex items-center justify-center mx-auto mb-4">
+                          <X className="w-6 h-6 text-red-600" />
+                        </div>
+                        <p className="text-gray-600">{t.dashboard.failed}</p>
+                      </>
+                    )}
                   </div>
                 </div>
               )}
