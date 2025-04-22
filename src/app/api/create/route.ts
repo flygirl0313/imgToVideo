@@ -4,22 +4,45 @@ import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { generateVideoFromImage } from "@/lib/api/video";
 
-export async function POST(request: Request) {
+const CREDITS_PER_GENERATION = 9.9;
+
+export async function POST(req: Request) {
   try {
     const session = await getServerSession(authOptions);
-    if (!session?.user) {
+    if (!session?.user?.email) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    const formData = await request.formData();
-    const imageFile = formData.get("image") as File;
+    const user = await prisma.user.findUnique({
+      where: { email: session.user.email },
+    });
 
-    if (!imageFile) {
-      return NextResponse.json({ error: "No image provided" }, { status: 400 });
+    if (!user) {
+      return NextResponse.json({ error: "User not found" }, { status: 404 });
+    }
+
+    // 检查是否有足够的积分或免费试用机会
+    if (user.credits < CREDITS_PER_GENERATION && user.freeTrialUsed) {
+      return NextResponse.json(
+        { error: "Insufficient credits" },
+        { status: 402 }
+      );
+    }
+
+    const formData = await req.formData();
+    const image = formData.get("image") as File;
+    const title = formData.get("title") as string;
+    const description = formData.get("description") as string;
+
+    if (!image || !title) {
+      return NextResponse.json(
+        { error: "Missing required fields" },
+        { status: 400 }
+      );
     }
 
     // 验证文件类型
-    if (!imageFile.type.startsWith("image/")) {
+    if (!image.type.startsWith("image/")) {
       return NextResponse.json(
         { error: "Invalid file type. Please upload an image." },
         { status: 400 }
@@ -27,74 +50,44 @@ export async function POST(request: Request) {
     }
 
     // 验证文件大小（最大 10MB）
-    if (imageFile.size > 10 * 1024 * 1024) {
+    if (image.size > 10 * 1024 * 1024) {
       return NextResponse.json(
         { error: "File too large. Maximum size is 10MB." },
         { status: 400 }
       );
     }
 
-    // 将 File 转换为 Buffer
-    const arrayBuffer = await imageFile.arrayBuffer();
-    const buffer = Buffer.from(arrayBuffer);
+    const buffer = Buffer.from(await image.arrayBuffer());
+    const videoUrl = await generateVideoFromImage(buffer);
 
-    // 1. 创建视频记录
+    // 创建视频记录
     const video = await prisma.video.create({
       data: {
-        user: {
-          connect: {
-            id: session.user.id,
-          },
-        },
-        title: imageFile.name.split(".")[0] || "New Video",
-        status: "processing",
-        url: "", // 初始为空，后续更新
+        title,
+        description,
+        url: videoUrl,
+        userId: user.id,
+        images: [videoUrl], // 存储视频URL作为图片
+        status: "completed",
       },
     });
 
-    try {
-      // 2. 调用视频生成 API
-      const videoUrl = await generateVideoFromImage(buffer);
+    // 更新用户积分和免费试用状态
+    await prisma.user.update({
+      where: { id: user.id },
+      data: {
+        credits: user.freeTrialUsed
+          ? user.credits - CREDITS_PER_GENERATION
+          : user.credits,
+        freeTrialUsed: true,
+      },
+    });
 
-      // 3. 更新视频记录
-      await prisma.video.update({
-        where: { id: video.id },
-        data: {
-          status: "completed",
-          url: videoUrl,
-        },
-      });
-
-      return NextResponse.json({
-        id: video.id,
-        status: "completed",
-        url: videoUrl,
-      });
-    } catch (error) {
-      console.error("Video generation error:", error);
-
-      // 如果视频生成失败，更新视频状态
-      await prisma.video.update({
-        where: { id: video.id },
-        data: {
-          status: "failed",
-        },
-      });
-
-      return NextResponse.json(
-        {
-          error:
-            error instanceof Error ? error.message : "Failed to generate video",
-          id: video.id,
-          status: "failed",
-        },
-        { status: 500 }
-      );
-    }
+    return NextResponse.json(video);
   } catch (error) {
     console.error("Error creating video:", error);
     return NextResponse.json(
-      { error: "Failed to create video" },
+      { error: "Internal server error" },
       { status: 500 }
     );
   }

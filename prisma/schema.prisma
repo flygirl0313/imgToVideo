@@ -19,7 +19,8 @@ model User {
   sessions      Session[]
   orders        Order[]
   videos        Video[]
-  credits       Int       @default(0)
+  credits       Int       @default(10)
+  freeTrialUsed Boolean   @default(false)
 }
 
 model Account {
