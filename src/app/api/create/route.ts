@@ -9,12 +9,12 @@ const CREDITS_PER_GENERATION = 9.9;
 export async function POST(req: Request) {
   try {
     const session = await getServerSession(authOptions);
-    if (!session) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    if (!session || !session.user?.id) {
+      return NextResponse.json({ error: "未登录" }, { status: 401 });
     }
 
     const user = await prisma.user.findUnique({
-      where: { email: session.user.email },
+      where: { id: session.user.id },
       select: {
         id: true,
         credits: true,
@@ -23,15 +23,12 @@ export async function POST(req: Request) {
     });
 
     if (!user) {
-      return NextResponse.json({ error: "User not found" }, { status: 404 });
+      return NextResponse.json({ error: "用户不存在" }, { status: 404 });
     }
 
     // 检查是否有足够的积分或免费试用机会
     if (user.credits < CREDITS_PER_GENERATION && user.freeTrialUsed) {
-      return NextResponse.json(
-        { error: "Insufficient credits" },
-        { status: 402 }
-      );
+      return NextResponse.json({ error: "积分不足" }, { status: 402 });
     }
 
     const formData = await req.formData();
@@ -40,16 +37,13 @@ export async function POST(req: Request) {
     const description = formData.get("description") as string;
 
     if (!image || !title) {
-      return NextResponse.json(
-        { error: "Missing required fields" },
-        { status: 400 }
-      );
+      return NextResponse.json({ error: "缺少必要字段" }, { status: 400 });
     }
 
     // 验证文件类型
     if (!image.type.startsWith("image/")) {
       return NextResponse.json(
-        { error: "Invalid file type. Please upload an image." },
+        { error: "无效的文件类型，请上传图片" },
         { status: 400 }
       );
     }
@@ -57,7 +51,7 @@ export async function POST(req: Request) {
     // 验证文件大小（最大 10MB）
     if (image.size > 10 * 1024 * 1024) {
       return NextResponse.json(
-        { error: "File too large. Maximum size is 10MB." },
+        { error: "文件太大，最大支持 10MB" },
         { status: 400 }
       );
     }
@@ -72,7 +66,7 @@ export async function POST(req: Request) {
         description,
         url: videoUrl,
         userId: user.id,
-        images: [videoUrl], // 存储视频URL作为图片
+        images: [videoUrl],
         status: "completed",
       },
     });
@@ -91,9 +85,6 @@ export async function POST(req: Request) {
     return NextResponse.json(video);
   } catch (error) {
     console.error("Error creating video:", error);
-    return NextResponse.json(
-      { error: "Internal server error" },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: "服务器内部错误" }, { status: 500 });
   }
 }
