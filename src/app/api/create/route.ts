@@ -57,7 +57,7 @@ export async function POST(req: Request) {
     }
 
     const buffer = Buffer.from(await image.arrayBuffer());
-    const taskId = await generateVideoFromImage(buffer, description);
+    const { taskId } = await generateVideoFromImage(buffer, description);
 
     // 创建视频记录，初始状态为 processing
     const video = await prisma.video.create({
