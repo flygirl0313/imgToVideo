@@ -15,8 +15,18 @@ interface LumaGenerationResponse {
     prompt: string;
     aspect_ratio: string;
   };
-  result?: {
-    video_url: string;
+}
+
+interface LumaTaskResponse {
+  id: string;
+  state: string;
+  created_at: string;
+  request: {
+    prompt: string;
+    aspect_ratio: string;
+  };
+  video?: {
+    url: string;
   };
 }
 
@@ -61,7 +71,7 @@ export async function checkVideoGenerationStatus(
   taskId: string
 ): Promise<{ status: string; videoUrl?: string }> {
   try {
-    const response = await axios.get<LumaGenerationResponse>(
+    const response = await axios.get<LumaTaskResponse>(
       `${API_BASE_URL}/luma/generations/${taskId}`,
       {
         headers: {
@@ -71,13 +81,10 @@ export async function checkVideoGenerationStatus(
       }
     );
 
-    if (
-      response.data.state === "completed" &&
-      response.data.result?.video_url
-    ) {
+    if (response.data.state === "completed" && response.data.video?.url) {
       return {
         status: "completed",
-        videoUrl: response.data.result.video_url,
+        videoUrl: response.data.video?.url,
       };
     }
 
