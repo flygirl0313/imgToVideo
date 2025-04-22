@@ -48,15 +48,26 @@ export async function POST(req: Request) {
       );
     }
 
-    // 验证文件大小（最大 10MB）
-    if (image.size > 10 * 1024 * 1024) {
+    // 验证文件大小（最大 5MB）
+    if (image.size > 5 * 1024 * 1024) {
       return NextResponse.json(
-        { error: "文件太大，最大支持 10MB" },
+        { error: "文件太大，最大支持 5MB" },
         { status: 400 }
       );
     }
 
     const buffer = Buffer.from(await image.arrayBuffer());
+
+    // 检查 base64 大小
+    const base64Size = buffer.length * 1.37; // base64 字符串大小约为原始大小的 1.37 倍
+    if (base64Size > 10 * 1024 * 1024) {
+      // 10MB base64 限制
+      return NextResponse.json(
+        { error: "图片太大，请压缩后重试" },
+        { status: 400 }
+      );
+    }
+
     const { taskId } = await generateVideoFromImage(buffer, description);
 
     // 创建视频记录，初始状态为 processing

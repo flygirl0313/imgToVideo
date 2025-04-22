@@ -112,9 +112,9 @@ export function VideoList({ videos }: VideoListProps) {
                   <Button
                     variant="outline"
                     size="sm"
-                    className="bg-white hover:bg-gray-50 text-purple-600 border border-purple-200"
+                    className="bg-white hover:bg-gray-50 text-purple-600 border border-purple-200 flex items-center"
                   >
-                    <a href={video.url} download>
+                    <a href={video.url} download className="flex items-center">
                       <Download className="w-4 h-4 mr-2" />
                       {t.dashboard.download}
                     </a>
@@ -123,7 +123,7 @@ export function VideoList({ videos }: VideoListProps) {
                 <Button
                   variant="outline"
                   size="sm"
-                  className="bg-white hover:bg-gray-50 text-red-500 border border-red-200"
+                  className="bg-white hover:bg-gray-50 text-red-500 border border-red-200 flex items-center"
                 >
                   <Trash2 className="w-4 h-4 mr-2" />
                   {t.dashboard.delete}

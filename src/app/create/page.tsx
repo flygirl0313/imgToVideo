@@ -20,6 +20,58 @@ import {
 import { motion } from "framer-motion";
 import { Textarea } from "@/components/ui/textarea";
 
+// 图片压缩函数
+async function compressImage(file: File): Promise<File> {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onload = (event) => {
+      const img = new Image();
+      img.src = event.target?.result as string;
+      img.onload = () => {
+        const canvas = document.createElement("canvas");
+        let width = img.width;
+        let height = img.height;
+
+        // 计算新的尺寸，保持宽高比
+        const maxSize = 1280; // 最大尺寸
+        if (width > height && width > maxSize) {
+          height = Math.round((height * maxSize) / width);
+          width = maxSize;
+        } else if (height > maxSize) {
+          width = Math.round((width * maxSize) / height);
+          height = maxSize;
+        }
+
+        canvas.width = width;
+        canvas.height = height;
+        const ctx = canvas.getContext("2d");
+        ctx?.drawImage(img, 0, 0, width, height);
+
+        // 转换为 Blob
+        canvas.toBlob(
+          (blob) => {
+            if (blob) {
+              // 创建新的 File 对象
+              const compressedFile = new File([blob], file.name, {
+                type: "image/jpeg",
+                lastModified: Date.now(),
+              });
+              resolve(compressedFile);
+            } else {
+              reject(new Error("Failed to compress image"));
+            }
+          },
+          "image/jpeg",
+          0.8 // 压缩质量
+        );
+      };
+      img.onerror = () => reject(new Error("Failed to load image"));
+    };
+    reader.onerror = () => reject(new Error("Failed to read file"));
+  });
+}
+
 export default function CreatePage() {
   const { data: session } = useSession();
   const router = useRouter();
@@ -30,15 +82,23 @@ export default function CreatePage() {
   const [isLoading, setIsLoading] = useState(false);
   const [description, setDescription] = useState("");
 
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
-      setSelectedFile(file);
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setPreview(reader.result as string);
-      };
-      reader.readAsDataURL(file);
+      try {
+        // 压缩图片
+        const compressedFile = await compressImage(file);
+        setSelectedFile(compressedFile);
+
+        const reader = new FileReader();
+        reader.onloadend = () => {
+          setPreview(reader.result as string);
+        };
+        reader.readAsDataURL(compressedFile);
+      } catch (error) {
+        console.error("Error compressing image:", error);
+        alert("图片压缩失败，请重试");
+      }
     }
   };
 
